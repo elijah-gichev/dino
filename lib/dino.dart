@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
 const int GRAVITY_PPSPS = 2000;
+enum DinoState {
+  running,
+  jumping,
+}
 
 class Sprite {
   String imagePath;
@@ -25,6 +29,8 @@ class Dino extends GameObject {
 
   double dispY = 0; // displacement from the ground (смещение от земли)
   double velY = 0; //velocity value
+
+  DinoState state = DinoState.running;
 
   @override
   Widget render() {
@@ -56,11 +62,18 @@ class Dino extends GameObject {
       velY -= GRAVITY_PPSPS * elapsedSeconds;
     }
 
+    if (velY == 0) {
+      state = DinoState.running;
+    }
+
     frame =
         (elapsedTime.inMilliseconds / 100).floor() % 2 + 1; //переключение кадра
   }
 
   void jump() {
-    velY = 650;
+    if (state != DinoState.jumping) {
+      velY = 650;
+      state = DinoState.jumping;
+    }
   }
 }
